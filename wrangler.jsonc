@@ -5,7 +5,8 @@
   "compatibility_date": "2026-07-01",
   "vars": {
     "DONATION_URL": "https://queerlective.com",
-    "MEMBERS_BOARD_ID": "8402413272"
+    "MEMBERS_BOARD_ID": "8402413272",
+    "FEEDBACK_BOARD_ID": "18408298018"
   },
   "secrets_store_secrets": [
     {

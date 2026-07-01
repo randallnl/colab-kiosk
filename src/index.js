@@ -143,6 +143,10 @@ async function submitToMonday(request, env, headers) {
     
     const isGuestPass = mode === "guest";
 
+    if (!env.FEEDBACK_BOARD_ID) {
+      throw new Error("Missing FEEDBACK_BOARD_ID binding.");
+    }
+
     const cleanPerson = person?.trim() || "Unknown";
     const cleanActivityType = activityType || "Guest Pass";
 
