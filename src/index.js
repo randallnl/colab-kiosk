@@ -164,8 +164,8 @@ async function submitToMonday(request, env, headers) {
     };
 
     if (!isGuestPass && memberId && memberId !== "Not Listed") {
-      columnValues.tag_mm35xrcy = {
-        tag_names: [String(memberId)]
+      columnValues.dropdown_mm4v7b4h = {
+        labels: [String(memberId)]
       };
     }
 
