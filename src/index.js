@@ -163,6 +163,12 @@ async function submitToMonday(request, env, headers) {
       color_mm1rha8b: { label: "New" }
     };
 
+    if (!isGuestPass && memberId && memberId !== "Not Listed") {
+      columnValues.tag_mm35xrcy = {
+        tag_names: [String(memberId)]
+      };
+    }
+
     if (email) {
       columnValues.email_mkrh6fvx = {
         email,
