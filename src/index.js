@@ -26,25 +26,25 @@ export default {
   }
 };
 
-async function mondayRequest(env, query, variables = {}) {
-  const mondayApiToken = await getMondayApiToken(env);
+async function mondayGraphQL(env, query, variables = {}) {
+  const token = await getMondayApiToken(env);
 
   const response = await fetch("https://api.monday.com/v2", {
     method: "POST",
     headers: {
-      Authorization: mondayApiToken,
+      Authorization: token,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ query, variables })
   });
 
-  const data = await response.json();
+  const payload = await response.json();
 
-  if (data.errors) {
-    throw new Error(JSON.stringify(data.errors));
+  if (!response.ok || payload.errors) {
+    throw new Error(payload.errors?.[0]?.message || `monday API ${response.status}`);
   }
 
-  return data;
+  return payload.data;
 }
 
 async function getMondayApiToken(env) {
@@ -58,7 +58,7 @@ async function getMondayApiToken(env) {
     return tokenBinding;
   }
 
-  return tokenBinding.get();
+  return await tokenBinding.get();
 }
 
 async function getMembers(env, headers) {
@@ -80,7 +80,7 @@ async function getMembers(env, headers) {
       }
     `;
 
-    const data = await mondayRequest(env, query, {
+    const data = await mondayGraphQL(env, query, {
       boardId: [String(env.MEMBERS_BOARD_ID)]
     });
 
@@ -90,7 +90,7 @@ async function getMembers(env, headers) {
       "CoLab Only Membership"
     ];
 
-    const items = data.data.boards?.[0]?.items_page?.items || [];
+    const items = data.boards?.[0]?.items_page?.items || [];
 
     const members = items
       .filter((item) => {
@@ -182,7 +182,7 @@ async function submitToMonday(request, env, headers) {
   }
 `;
 
-const result = await mondayRequest(env, mutation, {
+const result = await mondayGraphQL(env, mutation, {
   boardId: String(env.FEEDBACK_BOARD_ID),
   itemName,
   columnValues: JSON.stringify(columnValues)

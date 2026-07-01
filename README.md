@@ -43,3 +43,29 @@ The Worker expects these production bindings:
 - `MEMBERS_BOARD_ID`: Monday.com board ID for member lookup.
 - `FEEDBACK_BOARD_ID`: Monday.com board ID for activity, guest pass, and feedback submissions.
 - `DONATION_URL`: URL used to generate the guest pass donation QR code.
+
+## Shared Monday.com token
+
+Use this Secret Store binding pattern to share the same Monday.com API token across Cloudflare Workers projects without copying the token into each repo:
+
+```jsonc
+{
+  "secrets_store_secrets": [
+    {
+      "binding": "MONDAY_API_TOKEN",
+      "store_id": "2b9ec8a0d6d742649ad4d3498815ca54",
+      "secret_name": "Central_Monday_API_TOKEN"
+    }
+  ]
+}
+```
+
+In Worker code, Secret Store bindings are objects, not plain strings. Read the value with `.get()`:
+
+```js
+const token = await env.MONDAY_API_TOKEN.get();
+```
+
+The `binding` name is what Worker code uses: `env.MONDAY_API_TOKEN`. The `secret_name` is the shared secret stored in Cloudflare: `Central_Monday_API_TOKEN`.
+
+Do not use `env.MONDAY_API_TOKEN` directly as a string, and do not put the token value in `wrangler.jsonc`, `.dev.vars`, source code, or chat. If Monday.com auth fails after deployment, check that the `secret_name` casing exactly matches Cloudflare. In this project it is `Central_Monday_API_TOKEN`, not all caps.
