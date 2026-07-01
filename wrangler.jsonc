@@ -5,5 +5,12 @@
   "compatibility_date": "2026-07-01",
   "vars": {
     "DONATION_URL": "https://queerlective.com"
-  }
+  },
+  "secrets_store_secrets": [
+    {
+      "binding": "Monday_Central_API_TOKEN",
+      "store_id": "2b9ec8a0d6d742649ad4d3498815ca54",
+      "secret_name": "MONDAY_API_TOKEN"
+    }
+  ]
 }
