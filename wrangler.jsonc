@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "colab-kiosk",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-01",
+  "vars": {
+    "DONATION_URL": "https://queerlective.com"
+  }
+}
