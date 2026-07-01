@@ -48,7 +48,7 @@ async function mondayRequest(env, query, variables = {}) {
 }
 
 function getMondayApiToken(env) {
-  const token = env.Monday_Central_API_TOKEN || env.MONDAY_API_TOKEN;
+  const token = env.MONDAY_API_TOKEN;
 
   if (!token) {
     throw new Error("Missing Monday.com API token binding.");
