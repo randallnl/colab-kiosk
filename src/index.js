@@ -299,6 +299,16 @@ function renderPage(env) {
     color: #ccc;
   }
 
+  .notice {
+    padding: 12px 14px;
+    margin: 12px 0;
+    border-radius: 12px;
+    background: #292414;
+    border: 1px solid #5b4b1c;
+    color: #f4df9d;
+    font-size: .95rem;
+  }
+
   .hidden {
     display: none;
   }
@@ -320,6 +330,7 @@ function renderPage(env) {
 
 <script>
 let members = [];
+let memberLoadError = false;
 let resetTimer = null;
 
 const donationUrl = ${JSON.stringify(donationUrl)};
@@ -337,9 +348,12 @@ function resetHome() {
 async function loadMembers() {
   try {
     const res = await fetch("/members");
-    members = await res.json();
+    const data = await res.json();
+    members = Array.isArray(data) ? data : [];
+    memberLoadError = !Array.isArray(data);
   } catch (e) {
     members = [];
+    memberLoadError = true;
   }
 }
 
@@ -350,7 +364,12 @@ function memberSelect() {
     '</option>'
   ).join("");
 
+  const unavailableMessage = memberLoadError
+    ? '<div class="notice">Member list is unavailable. Please choose "I am not listed" to continue.</div>'
+    : "";
+
   return \`
+    \${unavailableMessage}
     <select id="person">
       <option value="">Select your name</option>
       \${options}
