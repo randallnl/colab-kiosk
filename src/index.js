@@ -27,7 +27,7 @@ export default {
 };
 
 async function mondayRequest(env, query, variables = {}) {
-  const mondayApiToken = getMondayApiToken(env);
+  const mondayApiToken = await getMondayApiToken(env);
 
   const response = await fetch("https://api.monday.com/v2", {
     method: "POST",
@@ -47,14 +47,18 @@ async function mondayRequest(env, query, variables = {}) {
   return data;
 }
 
-function getMondayApiToken(env) {
-  const token = env.MONDAY_API_TOKEN;
+async function getMondayApiToken(env) {
+  const tokenBinding = env.MONDAY_API_TOKEN;
 
-  if (!token) {
+  if (!tokenBinding) {
     throw new Error("Missing Monday.com API token binding.");
   }
 
-  return token;
+  if (typeof tokenBinding === "string") {
+    return tokenBinding;
+  }
+
+  return tokenBinding.get();
 }
 
 async function getMembers(env, headers) {
