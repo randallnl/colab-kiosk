@@ -27,10 +27,12 @@ export default {
 };
 
 async function mondayRequest(env, query, variables = {}) {
+  const mondayApiToken = getMondayApiToken(env);
+
   const response = await fetch("https://api.monday.com/v2", {
     method: "POST",
     headers: {
-      Authorization: env.MONDAY_API_TOKEN,
+      Authorization: mondayApiToken,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ query, variables })
@@ -43,6 +45,16 @@ async function mondayRequest(env, query, variables = {}) {
   }
 
   return data;
+}
+
+function getMondayApiToken(env) {
+  const token = env.Monday_Central_API_TOKEN || env.MONDAY_API_TOKEN;
+
+  if (!token) {
+    throw new Error("Missing Monday.com API token binding.");
+  }
+
+  return token;
 }
 
 async function getMembers(env, headers) {
